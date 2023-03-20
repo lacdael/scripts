@@ -116,7 +116,7 @@ def work( aFile ):
         if os.path.isfile( path ):
             reader = PyPDF2.PdfReader(open(path,"rb"))
             page = reader.pages[0]
-            if _state == 1 or _state == 2:
+            if _state == 0 or _state == 1:
                 page.rotate(180);
             outFile.add_page(page)
         else:
@@ -125,7 +125,7 @@ def work( aFile ):
         if _state > 3:
             _state = 0;
     # write new document to file
-    pdfOut = open( os.path.splitext(os.path.basename(aFile))[0]+"-printblock.pdf",'wb');
+    pdfOut = open( os.path.splitext(os.path.basename(aFile))[0]+"-printspread.pdf",'wb');
     outFile.write(pdfOut);
 
 def help( name ):
