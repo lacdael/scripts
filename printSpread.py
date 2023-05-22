@@ -113,7 +113,11 @@ def work( aFile ):
     outFile = PyPDF2.PdfWriter();
     for n in range(0,newPageCount):
         path = aDir+"/"+str(shuffled[n])+".pdf";
+
+
         if os.path.isfile( path ):
+            reader = None;
+            page = None;
             reader = PyPDF2.PdfReader(open(path,"rb"))
             page = reader.pages[0]
             if _state == 0 or _state == 1:
