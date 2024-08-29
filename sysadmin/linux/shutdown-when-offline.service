@@ -1,0 +1,12 @@
+[Unit]
+After=network-online.target
+Description=Detect offline status
+
+[Service]
+ExecStart=/root/test_shutdown.sh
+Restart=always
+RestartSec=720
+
+[Install]
+WantedBy=multi-user.target
+
