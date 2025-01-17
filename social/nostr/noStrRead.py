@@ -11,6 +11,7 @@ from pynostr.key import PublicKey
 import os
 import sys
 from dotenv import load_dotenv
+from dotenv import dotenv_values
 
 conf = dotenv_values(os.path.expanduser("~/.env"))
 
@@ -34,6 +35,12 @@ def noStr_read():
         Filters(kinds=[EventKind.TEXT_NOTE], limit=100),
         Filters(authors=[pubKey.hex()])
         ])
+
+    #filters = FiltersList([
+    #    Filters(kinds=[EventKind.DIRECT_MESSAGE], limit=100),  # Only listen for direct messages (kind 4)
+    #    Filters(authors=[pubKey.hex()])  # Filter by the user's public key
+    #])
+
     subscription_id = uuid.uuid1().hex
 
     r.add_subscription(subscription_id, filters)
@@ -49,6 +56,7 @@ def noStr_read():
         print(notice_msg.content)
     while message_pool.has_events():
         event_msg = message_pool.get_event()
+        
         print(event_msg.event.content)
 
 def noStr_hex_pub():
@@ -59,15 +67,14 @@ def noStr_send_DM():
 
 def noStr_help( program ):
         print("{} [ -r ] [ -H ] [ -D <pub> <message> ]".format( sys.argv[0], ) );
-            print("\t-r\t: read posts");
-            print("\t-H\t: hex format of pub key");
-            print("\t-D\t: Send <message> to <pub>");
+        print("\t-r\t: read posts");
+        print("\t-H\t: hex format of pub key");
+        print("\t-D\t: Send <message> to <pub>");
  
 if __name__ == "__main__":
 
     if len(sys.argv) < 2:
-           sys.exit();
-
+        sys.exit();
     if sys.argv[1] == "-r":
         noStr_read();
     elif sys.argv[1] == "-H":

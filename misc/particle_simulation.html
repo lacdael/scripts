@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cellular Automata Simulator</title>
+    <style>
+        body { display: flex; flex-direction: column; align-items: center; font-family: Arial, sans-serif; }
+        canvas { border: 1px solid black; margin-top: 10px; }
+        .controls { display: flex; gap: 20px; margin-top: 10px; flex-wrap: wrap; }
+        .slider-container { display: flex; flex-direction: column; align-items: center; }
+    </style>
+</head>
+<body>
+
+    <h1>Cellular Automata Particle Simulator</h1>
+    <canvas id="simCanvas" width="800" height="600"></canvas>
+    
+    <div class="controls">
+        <div class="slider-container">
+            <label for="speedSlider">Speed:</label>
+            <input type="range" id="speedSlider" min="1" max="10" value="5">
+        </div>
+        
+        <div class="slider-container">
+            <label for="blueMergeSlider">Blue Collision Threshold (Merge):</label>
+            <input type="range" id="blueMergeSlider" min="1" max="10" value="3">
+        </div>
+        <div class="slider-container">
+            <label for="blueSplitSlider">Blue Time Threshold (Split):</label>
+            <input type="range" id="blueSplitSlider" min="1" max="10" value="5">
+        </div>
+
+        <div class="slider-container">
+            <label for="redMergeSlider">Red Collision Threshold (Merge):</label>
+            <input type="range" id="redMergeSlider" min="1" max="10" value="3">
+        </div>
+        <div class="slider-container">
+            <label for="redSplitSlider">Red Time Threshold (Split):</label>
+            <input type="range" id="redSplitSlider" min="1" max="10" value="5">
+        </div>
+    </div>
+
+    <script>
+    const canvas = document.getElementById("simCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const particles = [];
+    const particleCount = 100;
+    let speedMultiplier = 5;
+    let blueMergeThreshold = 3;
+    let redMergeThreshold = 3;
+    let blueSplitTimeThreshold = 2000; // 5 seconds in milliseconds
+    let redSplitTimeThreshold = 2000; // 5 seconds in milliseconds
+    let startRadius = 2;
+
+    function random(min, max) {
+        return Math.random() * (min - max) + max;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Particle {
+    constructor(x, y, radius, color) {
+        this.startRadius = 2;
+	this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.vx = random(-1, 1) * speedMultiplier;
+        this.vy = random(-1, 1) * speedMultiplier;
+        this.collisionCount = 0;
+        this.splitTimer = 0;  // Timer for tracking split time
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    update(deltaTime, particles) {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x - this.radius < 0 || this.x + this.radius > canvas.width) {
+            this.vx *= -1;
+			    return;
+        }
+        if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) {
+            this.vy *= -1;
+			    return;
+        }
+
+
+	    if (this.radius > 2 ) { //this.startRadius ) {
+            this.splitTimer += deltaTime;
+            const splitThreshold = this.color === "blue" ? blueSplitTimeThreshold : redSplitTimeThreshold;
+            if (this.splitTimer >= splitThreshold) {
+            
+			this.split(particles);  // Pass particles array to handle the split
+            }
+        }
+
+        for (let i = 0; i < particles.length; i++) {
+            let other = particles[i];
+            if (other !== this) {
+                if (this.isCollidingWith(other)) {
+		            if ( this.collisionCount < 0 ) this.handleBounce(other );
+                    
+					if (this.color === other.color) {
+                        this.handleCollision(other);
+                        this.collisionCount++;
+                        other.collisionCount++;
+
+                        let mergeThreshold = this.color === "blue" ? blueMergeThreshold : redMergeThreshold;
+                        if (this.collisionCount >= mergeThreshold && other.collisionCount >= mergeThreshold) {
+                            this.mergeWith(other);
+                            particles.splice(i, 1);  // Remove merged particle
+                        }
+                    } else {
+                        this.handleBounce(other);
+                    }
+                }
+				
+				                if (this.radius < other.radius) {
+                    this.applyAttraction(other);  // Attract smaller particles to larger ones
+                }
+				
+            }
+        }
+
+
+    }
+
+    isCollidingWith(other) {
+        const dx = this.x - other.x;
+        const dy = this.y - other.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        return distance < this.radius + other.radius;
+    }
+
+   handleCollision(other) {
+    const dx = this.x - other.x;
+    const dy = this.y - other.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    const nx = dx / distance;
+    const ny = dy / distance;
+
+    const relativeVx = this.vx - other.vx;
+    const relativeVy = this.vy - other.vy;
+    const relativeVelocity = relativeVx * nx + relativeVy * ny;
+
+    if (relativeVelocity < 0) {
+        const m1 = this.radius;
+        const m2 = other.radius;
+        const impulse = relativeVelocity / (m1 + m2);
+
+        if (m1 < m2) { 
+            this.vx -= 2 * impulse * m2 * nx;
+            this.vy -= 2 * impulse * m2 * ny;
+            other.vx += impulse * m1 * nx;
+            other.vy += impulse * m1 * ny;
+        } else {
+            this.vx -= impulse * m2 * nx;
+            this.vy -= impulse * m2 * ny;
+            other.vx += 2 * impulse * m1 * nx;
+            other.vy += 2 * impulse * m1 * ny;
+        }
+    }
+}
+
+handleBounce(other) {
+    const dx = this.x - other.x;
+    const dy = this.y - other.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    const nx = dx / distance;
+    const ny = dy / distance;
+
+    const relativeVx = this.vx - other.vx;
+    const relativeVy = this.vy - other.vy;
+    const relativeVelocity = relativeVx * nx + relativeVy * ny;
+
+    if (relativeVelocity < 0) {
+        const m1 = this.radius;
+        const m2 = other.radius;
+        const impulse = relativeVelocity / (m1 + m2);
+
+        if (m1 < m2) { 
+            this.vx -= 2 * impulse * m2 * nx;
+            this.vy -= 2 * impulse * m2 * ny;
+            other.vx += impulse * m1 * nx;
+            other.vy += impulse * m1 * ny;
+        } else {
+            this.vx -= impulse * m2 * nx;
+            this.vy -= impulse * m2 * ny;
+            other.vx += 2 * impulse * m1 * nx;
+            other.vy += 2 * impulse * m1 * ny;
+        }
+    }
+}
+
+	
+    applyAttraction(other) {
+        const dx = other.x - this.x;
+        const dy = other.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > this.radius + other.radius) {  // Avoid attraction if colliding
+            const attractionStrength = 0.04;  // Strength of attraction force
+            const fx = (dx / distance) * attractionStrength;
+            const fy = (dy / distance) * attractionStrength;
+
+            this.vx += fx;
+            this.vy += fy;
+        }
+    }
+
+
+    mergeWith(other) {
+        this.radius += other.radius;
+        this.vx *= 0.8;
+        this.vy *= 0.8;
+        this.splitTimer = 0;  // Reset the split timer
+        other.collisionCount = -5;
+        this.collisionCount = -5;
+    }
+
+split() {
+    this.merged = false;
+    this.splitTimer = 0;
+
+    // Separation offset based on the radius of the particle
+    const separationDistance = 1.5 * this.radius;
+
+    let newParticle1, newParticle2;
+
+    if (this.radius % 2 === 0) {
+        newParticle1 = new Particle(this.x + separationDistance, this.y + separationDistance, this.radius / 2);
+        newParticle2 = new Particle(this.x - separationDistance, this.y - separationDistance, this.radius / 2);
+    } else {
+        const largerRadius = Math.floor(this.radius / 2) + 1;
+        const smallerRadius = this.radius - largerRadius;
+        newParticle1 = new Particle(this.x + separationDistance, this.y + separationDistance, largerRadius);
+        newParticle2 = new Particle(this.x - separationDistance, this.y - separationDistance, smallerRadius);
+    }
+
+    newParticle1.color = this.color;		    
+    newParticle2.color = this.color;		    
+    const angle1 = Math.random() * Math.PI * 2;
+    newParticle1.vx = Math.cos(angle1) * speedMultiplier;
+    newParticle1.vy = Math.sin(angle1) * speedMultiplier;
+
+    const angle2 = angle1 + Math.PI;
+    newParticle2.vx = Math.cos(angle2) * speedMultiplier;
+    newParticle2.vy = Math.sin(angle2) * speedMultiplier;
+
+    const index = particles.indexOf(this);
+    if (index > -1) {
+        particles.splice(index, 1);
+    }
+
+    particles.push(newParticle1);
+    particles.push(newParticle2);
+}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
+
+for (let i = 0; i < particleCount; i++) {
+    let color = Math.random() > 0.5 ? "blue" : "red";  // Randomly assign blue or red
+    particles.push(new Particle(random(10, canvas.width - 10), random(10, canvas.height - 10), startRadius, color));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let lastTime = performance.now();
+function animate(currentTime) {
+    const deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const particle = particles[i];
+        particle.update(deltaTime, particles);
+        particle.draw();
+    }
+
+    requestAnimationFrame(animate);
+}
+
+
+
+
+
+
+
+
+    // Slider Controls
+    document.getElementById("speedSlider").addEventListener("input", (e) => {
+        speedMultiplier = parseFloat(e.target.value);
+    });
+    document.getElementById("blueMergeSlider").addEventListener("input", (e) => {
+        blueMergeThreshold = parseInt(e.target.value);
+    });
+    document.getElementById("redMergeSlider").addEventListener("input", (e) => {
+        redMergeThreshold = parseInt(e.target.value);
+    });
+    document.getElementById("blueSplitSlider").addEventListener("input", (e) => {
+        blueSplitTimeThreshold = parseInt(e.target.value) * 500;
+    });
+    document.getElementById("redSplitSlider").addEventListener("input", (e) => {
+        redSplitTimeThreshold = parseInt(e.target.value) * 500;
+    });
+
+    requestAnimationFrame(animate);
+
+    </script>
+
+</body>
+</html>
+

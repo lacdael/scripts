@@ -1,6 +1,7 @@
 import os
 import sys
-from dotenv import load_dotenv
+from dotenv import dotenv_values
+from dotenv import dotenv_values
 from pynostr.encrypted_dm import EncryptedDirectMessage
 from pynostr.key import PrivateKey
 from pynostr.key import PublicKey
@@ -18,7 +19,7 @@ import uuid
 # https://github.com/holgern/pynostr
 conf = dotenv_values(os.path.expanduser("~/.env"))
 
-npub = conf['NOSTR_PUB'];
+npub = conf['NOSTR_PUB_TAROK'];
 
 pubKey = PublicKey.from_npub( npub );
 

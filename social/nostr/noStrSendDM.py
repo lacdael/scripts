@@ -1,5 +1,6 @@
 import os
 import sys
+from dotenv import dotenv_values
 from dotenv import load_dotenv
 from pynostr.encrypted_dm import EncryptedDirectMessage
 from pynostr.key import PrivateKey
@@ -32,6 +33,9 @@ def getDM( msg, priKey ):
       cleartext_content=msg
     )
     dm_event = dm.to_event()
+
+    # create 'e' tag reference to the note you're replying to
+    #reply.add_event_ref(original_note_id) 
     dm_event.sign(priKey.hex())
     return dm_event;
 
@@ -66,5 +70,7 @@ def run( msg ):
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         run( sys.argv[1] );
+        #add optional reply note
+        #add optional recipient
     else:
         print("{} <TEXT_NOTE>".format( sys.argv[0], ) );

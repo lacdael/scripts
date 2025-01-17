@@ -27,7 +27,7 @@ print("token: {}".format(access_token))
 print("token_secret: {}".format(access_token_secret))
 
 # Define the file name
-TOKEN_FILE = os.path.join( os.path.dirname(os.path.abspath( __file__ )),'.credentials');
+TOKEN_FILE = os.path.join( os.path.dirname(os.path.abspath( __file__ )),'.env.local');
 #{"SOURCE":{"timeStamp":"<TIMESTAMP>","formatString":"<FORMAT>"}}
 CACHE_FILE = os.path.join( os.path.dirname(os.path.abspath( __file__ )),".cache-twitter-uploader.json");
 DEFAULT_FORMAT_STR = "%Y-%m-%dT%H:%M:%S%z";
@@ -365,7 +365,7 @@ def getNextPost( data, given_timestamp ):
 	    print("None")
     return post;
 
-def isRecentlyTouched(file_path, threshold_min=120):
+def isRecentlyTouched(file_path, threshold_min=2160):
     try:
         last_modified_time = os.path.getmtime(file_path)
         current_time = time.time()
