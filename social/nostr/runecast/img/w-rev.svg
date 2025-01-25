@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="600.000000pt" height="600.000000pt" viewBox="0 0 600.000000 600.000000" preserveAspectRatio="xMidYMid meet">
+<metadata stroke-width="10.0" stroke="red" fill="black">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+<g transform="translate(0.000000,600.000000) scale(0.100000,-0.100000)" fill="black" stroke="red" stroke-width="10.0">
+<path d="M2284 3013 c3 -1248 9 -2315 12 -2373 l6 -105 271 6 c150 4 287 7 305 8 21 1 32 6 32 16 0 8 7 15 15 15 13 0 15 98 15 818 0 451 3 915 7 1032 l6 213 485 516 c267 284 552 586 634 672 l148 157 -665 646 -665 646 -306 0 -307 0 7 -2267z m720 2079 c78 -76 365 -356 639 -622 l498 -483 -24 -26 c-14 -14 -295 -314 -626 -666 l-601 -640 0 -675 c0 -371 -3 -833 -7 -1026 l-6 -351 -260 -7 c-142 -4 -261 -6 -263 -4 -6 6 -26 4609 -20 4624 4 12 51 14 267 14 l262 0 141 -138z" stroke-width="10.0" stroke="red" fill="black" />
+<path d="M2871 4745 c0 -155 27 -1487 31 -1488 1 -1 12 -7 24 -13 19 -11 54 20 403 353 l382 365 -61 66 c-33 37 -222 231 -420 432 l-359 365 0 -80z m755 -780 c-1 -5 -153 -154 -337 -330 l-334 -319 -6 204 c-4 113 -10 421 -13 685 l-7 480 350 -355 c193 -195 349 -359 347 -365z" stroke-width="10.0" stroke="red" fill="black" />
+</g>
+</svg>

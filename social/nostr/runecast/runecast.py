@@ -1,6 +1,7 @@
 import random;
 
-_URL_PREFIX = "https://example.com/imgs";
+_URL_PREFIX = "https://raw.githubusercontent.com/lacdael/scripts/refs/heads/main/social/nostr/runecast/img/"
+_SUFFIX = ".svg";
 
 _RUNES = [ "f","f-rev","u","u-rev","th","th-rev","o","o-rev",
  "r","r-rev","c","c-rev","g","w","w-rev","h","h-rev",
@@ -25,7 +26,7 @@ _STRINGS = {
 	"o-NAME" : {"en":"Os"},
 	"o" :{"en": "Mouth, creativity, "},
 	"o-rev-NAME" : {"en":"Os - reversed"},
-	"o-rev":{"en": ""},
+	"o-rev":{"en": "At a standstill, lack of direction"},
 	"r-NAME" :{"en": "Rad"},
 	"r" :{"en": "Wagaon, travel, journey, destiny."},
 	"r-rev-NAME" :{"en": "Rad - reversed"},
@@ -98,5 +99,5 @@ def getRune():
     k = random.choice( _RUNES );
     return "{}\n{}\n{}\n".format(
             _STRINGS[ k+"-NAME"]["en"],
-            _URL_PREFIX+k+".png",
+            _URL_PREFIX+k+_SUFFIX,
             _STRINGS[ k ]["en"]);
