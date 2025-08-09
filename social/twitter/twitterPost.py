@@ -108,7 +108,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         footers = "";
         if len(sys.argv) > 2:
-            footer = sys.argv[2];
-        rslt = postToTwitter( sys.argv[1] , footer  );
+            footers = sys.argv[2];
+        rslt = postToTwitter( sys.argv[1] , footers  );
     else:
         print("{} <RSS FEED>".format( sys.argv[0], ) );

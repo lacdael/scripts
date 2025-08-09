@@ -467,8 +467,8 @@ pythonx ./cozy_ambience.py input.wav input2.wav input3.wav \
   --reverb_wet_mix 0.4 \
   --decay_time 1.0 \
   --gain_post 1.0 \
-  --mod_speed 1.5 \
-  --resonanse 1 \
+  --mod_speed 0.5 \
+  --resonance 0.5 \
   --fmin 300 \
   --fmax 1200 \
   --record output.wav

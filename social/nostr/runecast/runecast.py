@@ -4,7 +4,7 @@ _URL_PREFIX = "https://raw.githubusercontent.com/lacdael/scripts/refs/heads/main
 _SUFFIX = ".svg";
 
 _RUNES = [ "f","f-rev","u","u-rev","th","th-rev","o","o-rev",
- "r","r-rev","c","c-rev","g","w","w-rev","h","h-rev",
+ "r","r-rev","c","c-rev","g","w","w-rev","h",    #"h-rev",
  "n","n-rev","i","j","iw","p","p-rev","x","x-rev","s",
  "t","t-rev","b","b-rev","e","e-rev","m","m-rev","l",
  "l-rev","ng","oe","oe-rev","d"
@@ -43,8 +43,8 @@ _STRINGS = {
 	"w-rev" :{"en": "Sorrow, strife, intoxication, frenzy."},
 	"h-NAME" :{"en": "Haegl"},
 	"h" :{"en": "Hailstrom, loss, destruction, change."},
-	"h-rev-NAME" :{"en": "Haegl - reversed"},
-	"h-rev" :{"en": "Catastrophe, loss, sickness, hardship, pain."},
+	#"h-rev-NAME" :{"en": "Haegl - reversed"},
+	#"h-rev" :{"en": "Catastrophe, loss, sickness, hardship, pain."},
 	"n-NAME" : {"en":"Nyd"},
 	"n" : {"en":"Need, necessity, hardship, delays."},
 	"n-rev-NAME" : {"en":"Nyd - reversed"},
